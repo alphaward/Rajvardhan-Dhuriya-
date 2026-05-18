@@ -2,12 +2,11 @@
     package="com.kakw.depot">
 
     <application
-        android:name="io.flutter.app.FlutterApplication"
         android:label="KAKW DEPOT"
         android:icon="@android:drawable/sym_def_app_icon"
         android:usesCleartextTraffic="true">
         <activity
-            android:name="io.flutter.embedding.android.FlutterActivity"
+            android:name=".MainActivity"
             android:exported="true"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"
