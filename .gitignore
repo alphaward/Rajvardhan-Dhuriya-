@@ -1,0 +1,41 @@
+# Flutter/Dart build and dependency files
+.dart_tool/
+.packages
+.pub/
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+.flutter-plugins-dependencies
+.generated_plugin_registrant.dart
+
+# Android
+.android/
+.gradle/
+/local.properties
+
+# iOS
+.ios/
+Pods/
+Podfile.lock
+
+# macOS
+.macos/
+
+# Visual Studio Code
+.vscode/
+
+# IntelliJ
+*.iml
+.idea/
+
+# Firebase
+firebase_options.dart
+
+# Misc
+*.log
+*.tmp
+*.swp
+pubspec.lock
+
+# Files created by editors
+*.DS_Store
