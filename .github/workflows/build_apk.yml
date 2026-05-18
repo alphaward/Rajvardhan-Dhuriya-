@@ -8,30 +8,81 @@ on:
 jobs:
   build-apk:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: gradle
+
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: stable
+          flutter-version: '3.22.2'
+          channel: 'stable'
+          cache: true
 
-      - name: Install dependencies
+      - name: Verify Flutter installation
+        run: |
+          flutter --version
+          flutter doctor -v
+
+      - name: Install Flutter dependencies
         run: flutter pub get
 
+      - name: Get pub dependencies
+        run: flutter pub pub get
+
       - name: Build release APK
-        run: flutter build apk --release
+        run: flutter build apk --release -v
+
+      - name: Check APK build output
+        run: |
+          ls -la build/app/outputs/flutter-apk/
+          ls -lh build/app/outputs/flutter-apk/app-release.apk
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: kakw-depot-apk
           path: build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 30
 
       - name: Create GitHub Release and attach APK
         uses: ncipollo/release-action@v1
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
           tag: kakw-depot-v${{ github.run_number }}
-          name: KAKW DEPOT v${{ github.run_number }}
+          name: KAKW DEPOT Release v${{ github.run_number }}
+          body: |
+            ## KAKW DEPOT Release v${{ github.run_number }}
+            
+            **Build Information:**
+            - Flutter Version: 3.22.2
+            - Build Number: ${{ github.run_number }}
+            - Commit: ${{ github.sha }}
+            - Date: ${{ github.event.head_commit.timestamp }}
+            
+            **APK Details:**
+            - App Name: kakw_depot
+            - Version: 1.0.0
+            - Release Type: Production APK
+            
+            ### Download
+            The APK file is attached to this release. Install on your Android device.
+            
+            **Installation Instructions:**
+            1. Enable "Unknown Sources" in Android Settings
+            2. Download the APK file
+            3. Open and install on your Android device
           files: build/app/outputs/flutter-apk/app-release.apk
+          draft: false
+          prerelease: false
+          allowUpdates: true
